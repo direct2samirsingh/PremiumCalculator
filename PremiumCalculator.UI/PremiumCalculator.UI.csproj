@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
@@ -28,6 +28,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\PremiumCalculator.DAL\PremiumCalculator.DAL.csproj" />
     <ProjectReference Include="..\PremiumCalculator.Services\PremiumCalculator.Services.csproj" />
     <ProjectReference Include="..\PremiumCalculator.ViewModels\PremiumCalculator.ViewModels.csproj" />
   </ItemGroup>

@@ -9,5 +9,6 @@ namespace PremiumCalculator.ViewModels.Home
     public class HomePageResponseViewModel
     {
         public double MonthlyPremium { get; set; }
+        public Dictionary<string, string> Errors  { get; set; }
     }
 }

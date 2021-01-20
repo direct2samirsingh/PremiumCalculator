@@ -10,7 +10,8 @@ export class Home extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            model : new HomeModel({})
+            model: new HomeModel({}),
+            serverErrors : []
         };
 
         this.calculate = this.calculate.bind(this);
@@ -57,9 +58,15 @@ export class Home extends Component {
             <option value={occupation.id} key={occupation.id}>{occupation.name}</option>
         );
 
+
+        let errors = this.state.serverErrors;
+        let errorItems = Object.keys(errors).map(name => (
+            <p class="text-danger">{ errors[name] }</p>
+        ));
+        
         let submitted = this.submitted;
         let validation = this.state.model.validator.validate(this.state.model);
-
+        
         return (
             <div>
                 <h1>Enter details below:</h1>
@@ -68,24 +75,31 @@ export class Home extends Component {
                     <table>
                         <tbody>
                             <tr>
+                                <td colSpan="2">
+                                    {errorItems}
+                                </td>
+                            </tr>
+                            <tr>
                                 <td>Name</td>
                                 <td><input required type="text" value={this.state.model.name} onChange={this.handleChange('name')} /></td>
-                                <td>{submitted && validation.name.message !== '' && <span>{validation.name.message}</span>}</td>
+                                <td>
+                                    {submitted && validation.name.message !== '' && <span class="text-danger">{validation.name.message}</span>}
+                                </td>
                             </tr>   
                             <tr>
                                 <td>Age</td>
                                 <td><input required type="number" value={this.state.model.age} onChange={this.handleChange('age')} /></td>
-                                <td>{submitted && validation.age.message !== '' && <span>{validation.age.message}</span>}</td>
+                                <td>{submitted && validation.age.message !== '' && <span class="text-danger">{validation.age.message}</span>}</td>
                             </tr>
                             <tr>
                                 <td>Date of Birth</td>
                                 <td><input required type="date" value={this.state.model.dateOfBirth} onChange={this.handleChange('dateOfBirth')} /></td>
-                                <td>{submitted && validation.dateOfBirth.message !== '' && <span>{validation.dateOfBirth.message}</span>}</td>
+                                <td>{submitted && validation.dateOfBirth.message !== '' && <span class="text-danger">{validation.dateOfBirth.message}</span>}</td>
                             </tr>
                             <tr>
-                                <td>Sum Insured</td>
+                                <td>Death - Sum Insured</td>
                                 <td><input required type="number" value={this.state.model.sumInsured} onChange={this.handleChange('sumInsured')} /></td>
-                                <td>{submitted && validation.sumInsured.message !== '' && <span>{validation.sumInsured.message}</span>}</td>
+                                <td>{submitted && validation.sumInsured.message !== '' && <span class="text-danger">{validation.sumInsured.message}</span>}</td>
                             </tr>
                             <tr>
                                 <td>Occupation</td>
@@ -94,7 +108,7 @@ export class Home extends Component {
                                         {optionItems}
                                     </select>
                                 </td>
-                                <td>{submitted && validation.occupationId.message !== '' && <span>{validation.occupationId.message}</span>}</td>
+                                <td>{submitted && validation.occupationId.message !== '' && <span class="text-danger">{validation.occupationId.message}</span>}</td>
                             </tr>
                             <tr>
                                 <td>Monthly Premium</td>
@@ -134,11 +148,12 @@ export class Home extends Component {
         })
             .then(response => response.json())
             .then((data) => {
-                this.setState({ monthlyPremium: data.monthlyPremium, loading: false });
+                this.setState({ monthlyPremium: data.monthlyPremium, serverErrors: data.errors, loading: false });
             })
             .catch(error => this.setState({
                 isLoading: false,
-                message: 'Error occured while processing ' + error
+                monthlyPremium: 0,
+                serverErrors : ['', 'Error occured while processing ' + error]
             }));
     }
 

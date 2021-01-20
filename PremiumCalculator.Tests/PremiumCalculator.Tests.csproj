@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\PremiumCalculator.BLL\PremiumCalculator.BLL.csproj" />
+    <ProjectReference Include="..\PremiumCalculator.ViewModels\PremiumCalculator.ViewModels.csproj" />
   </ItemGroup>
 
 </Project>

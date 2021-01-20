@@ -1,6 +1,8 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PremiumCalculator.BLL;
 using PremiumCalculator.Models;
+using PremiumCalculator.ViewModels.Home;
+using System;
 
 namespace PremiumCalculator.Tests
 {
@@ -22,9 +24,69 @@ namespace PremiumCalculator.Tests
         }
 
         [TestMethod]
-        public void EnsureThatOccupationServiceReturnsData()
+        public void EnsureThatNameIsProvidedInHomeRequestViewModel()
         {
-            
+            HomePageRequestViewModel model = new HomePageRequestViewModel() { Name = "", 
+                DateOfBirth = DateTime.Now.ToShortDateString(),
+                Age = 35,
+                OccupationId = 5,
+                SumInsured = 100_000
+            };
+
+            var errors = model.Validate();
+
+            Assert.IsTrue(errors.Count == 1);
+        }
+
+        [TestMethod]
+        public void EnsureThatDateOfBirthIsWithinRangeInHomeRequestViewModel()
+        {
+            HomePageRequestViewModel model = new HomePageRequestViewModel()
+            {
+                Name = "Sam",
+                DateOfBirth = new DateTime(1850, 10, 01).ToShortDateString(),
+                Age = 35,
+                OccupationId = 5,
+                SumInsured = 100_000
+            };
+
+            var errors = model.Validate();
+
+            Assert.IsTrue(errors.Count == 1);
+        }
+
+        [TestMethod]
+        public void EnsureThatSumInsuredIsGreaterThanZeroInHomeRequestViewModel()
+        {
+            HomePageRequestViewModel model = new HomePageRequestViewModel()
+            {
+                Name = "Sam",
+                DateOfBirth = DateTime.Now.ToShortDateString(),
+                Age = 35,
+                OccupationId = 5,
+                SumInsured = 0
+            };
+
+            var errors = model.Validate();
+
+            Assert.IsTrue(errors.Count == 1);
+        }
+
+        [TestMethod]
+        public void EnsureThatAgeIsWithinRangeInHomeRequestViewModel()
+        {
+            HomePageRequestViewModel model = new HomePageRequestViewModel()
+            {
+                Name = "Sam",
+                DateOfBirth = DateTime.Now.ToShortDateString(),
+                Age = 135,
+                OccupationId = 5,
+                SumInsured = 100_000
+            };
+
+            var errors = model.Validate();
+
+            Assert.IsTrue(errors.Count == 1);
         }
     }
 }

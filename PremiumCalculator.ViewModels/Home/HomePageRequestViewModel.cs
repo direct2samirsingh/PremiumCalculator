@@ -33,7 +33,7 @@ namespace PremiumCalculator.ViewModels.Home
                 Errors.Add(nameof(Age).ToLower(), "Please enter age between 1-130");
             }
 
-            if (SumInsured < 0)
+            if (SumInsured <= 0)
             {
                 Errors.Add(nameof(SumInsured).ToLower(), "Sum Insured must be greater than 0");
             }

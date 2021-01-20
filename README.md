@@ -26,3 +26,5 @@ Before you start, please:
  
  -> The formula provided for Monthly Premium was (Death Cover amount * Occupation Rating Factor * Age) /1000 * 12, however the premium calculated seemed to be 
 	unusually huge almost 50%, hence I have modified a bit to put paranthesis around 1000 * 12. Formula used in application is (Death Cover amount * Occupation Rating Factor * Age) /(1000 * 12)
+	
+ ->  Since specific validations were not provided, I have just come up with some common validations. It is just for the purpose of demo.

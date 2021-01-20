@@ -8,7 +8,7 @@ namespace PremiumCalculator.ViewModels.Home
 {
     public class HomePageRequestViewModel
     {
-        public int Age { get; set; }
+        public short Age { get; set; }
         public string DateOfBirth { get; set; }
         public double SumInsured { get; set; }
         public int OccupationId { get; set; }

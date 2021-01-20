@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using PremiumCalculator.DAL;
+using PremiumCalculator.Services;
 using PremiumCalculator.UI.Data;
 using PremiumCalculator.UI.Models;
 
@@ -48,6 +49,8 @@ namespace PremiumCalculator.UI
 
             services.AddControllersWithViews();
             services.AddRazorPages();
+
+            services.AddPremiumCalculatorServices();
 
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using PremiumCalculator.Services.Core;
 using PremiumCalculator.ViewModels.Shared;
 using System;
 using System.Collections.Generic;
@@ -13,31 +14,18 @@ namespace PremiumCalculator.UI.Controllers
     [ApiController]
     public class OccupationController : ControllerBase
     {
-        // GET: api/<OccupationController>
-        [HttpGet]
-        public IEnumerable<SelectItemViewModel> Get() {
-            return new SelectItemViewModel[] { new SelectItemViewModel() { Id = 1, Name = "Value1"} , new SelectItemViewModel() { Id = 2, Name = "Value2" } };
+        private IOccupationService _occupationService;
+
+        public OccupationController(IOccupationService occupationService)
+        {
+            _occupationService = occupationService;    
         }
 
-        // GET api/<OccupationController>/5
-        [HttpGet("{id}")]
-        public string Get(int id) {
-            return "value";
+        // GET: api/Occupation
+        [HttpGet("GetSelectList")]
+        public IEnumerable<SelectItemViewModel> GetSelectList() {
+            return _occupationService.GetAll().Select(x => new SelectItemViewModel() { Id = x.OccupationID, Name = x.Name });
         }
 
-        // POST api/<OccupationController>
-        [HttpPost]
-        public void Post([FromBody] string value) {
-        }
-
-        // PUT api/<OccupationController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value) {
-        }
-
-        // DELETE api/<OccupationController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id) {
-        }
     }
 }

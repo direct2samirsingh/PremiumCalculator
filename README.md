@@ -3,7 +3,7 @@ Before you start, please:
 
  1) Change the SQL Server name in appSettings.json to point to appropriate server/location else it will try to use sql instance on local computer.
  
- 2) When running the application from Visual Studio, first create a user by clicking on the "Register as a new user" link and filling subsequent form
+ 2) When running the application from Visual Studio, change startup project to 'PremiumCalculator.UI'. Once page opens in browser, first create a user by clicking on the "Register as a new user" link and filling subsequent form
  
  3) On the next page click on 'Apply Migrations' button to generate the identity tables, once applied refresh the page
  

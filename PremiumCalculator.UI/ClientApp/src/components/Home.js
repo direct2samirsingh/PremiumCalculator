@@ -1,19 +1,18 @@
-import { isNumeric } from 'jquery';
+import FormValidator from './FormValidator'
 import React, { Component } from 'react';
 import authService from './api-authorization/AuthorizeService';
-import { FormErrors } from './FormErrors';
+import HomeModel from '../models/HomeModel';
 
 export class Home extends Component {
     static displayName = Home.name;
+    submitted = false;
 
     constructor(props) {
         super(props);
         this.state = {
-            name:'', age: 10, dateOfBirth: new Date(), sumInsured: 5000, occupationId: 1, monthlyPremium: 0,
-            occupations: [],
-            formErrors: { name:'', age: '', dateOfBirth: '', sumInsured: '', occupationId: '' },
-            ageValid: false, dateOfBirthValid: false, sumInsuredValid: false, occupationIdValid: false, formValid: false
+            model : new HomeModel({})
         };
+
         this.calculate = this.calculate.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -26,10 +25,7 @@ export class Home extends Component {
     }
 
     handleChange = (field) => (event) => {
-        let value = event.target.value;
-        let name = field;
-
-        this.setState({ [name]: value });
+        this.updateModel(field, event.target.value);        
     }
 
     handleSubmit(event) {
@@ -61,38 +57,44 @@ export class Home extends Component {
             <option value={occupation.id} key={occupation.id}>{occupation.name}</option>
         );
 
-        let formValid = this.state.formValid;
+        let submitted = this.submitted;
+        let validation = this.state.model.validator.validate(this.state.model);
 
         return (
             <div>
                 <h1>Enter details below:</h1>
-                <FormErrors formErrors={this.state.formErrors} />
+                
                 <form onSubmit={this.handleSubmit}>
                     <table>
                         <tbody>
                             <tr>
                                 <td>Name</td>
-                                <td><input required type="text" value={this.state.name} onChange={this.handleChange('name')} /></td>
+                                <td><input required type="text" value={this.state.model.name} onChange={this.handleChange('name')} /></td>
+                                <td>{submitted && validation.name.message !== '' && <span>{validation.name.message}</span>}</td>
                             </tr>   
                             <tr>
                                 <td>Age</td>
-                                <td><input required type="text" value={this.state.age} onChange={this.handleChange('age')} /></td>
+                                <td><input required type="number" value={this.state.model.age} onChange={this.handleChange('age')} /></td>
+                                <td>{submitted && validation.age.message !== '' && <span>{validation.age.message}</span>}</td>
                             </tr>
                             <tr>
                                 <td>Date of Birth</td>
-                                <td><input required type="date" value={this.state.dateOfBirth} onChange={this.handleChange('dateOfBirth')} /></td>
+                                <td><input required type="date" value={this.state.model.dateOfBirth} onChange={this.handleChange('dateOfBirth')} /></td>
+                                <td>{submitted && validation.dateOfBirth.message !== '' && <span>{validation.dateOfBirth.message}</span>}</td>
                             </tr>
                             <tr>
                                 <td>Sum Insured</td>
-                                <td><input required type="text" value={this.state.sumInsured} onChange={this.handleChange('sumInsured')} /></td>
+                                <td><input required type="number" value={this.state.model.sumInsured} onChange={this.handleChange('sumInsured')} /></td>
+                                <td>{submitted && validation.sumInsured.message !== '' && <span>{validation.sumInsured.message}</span>}</td>
                             </tr>
                             <tr>
                                 <td>Occupation</td>
                                 <td>
-                                    <select required value={this.state.occupationId} onChange={this.handleSelectChange('occupationId')}>
+                                    <select required value={this.state.model.occupationId} onChange={this.handleChange('occupationId')}>
                                         {optionItems}
                                     </select>
                                 </td>
+                                <td>{submitted && validation.occupationId.message !== '' && <span>{validation.occupationId.message}</span>}</td>
                             </tr>
                             <tr>
                                 <td>Monthly Premium</td>
@@ -101,7 +103,7 @@ export class Home extends Component {
                         </tbody>
                     </table>
                 </form>
-
+                <br/>
                 <button className="btn btn-primary" onClick={this.calculate}>Calculate</button>
             </div>
         );
@@ -109,14 +111,16 @@ export class Home extends Component {
 
 
     async calculate() {
+        const validation = this.state.model.validator.validate(this.state.model);
+        this.setState({ validation });
+        this.submitted = true;
+
+        if (!validation.isValid) {
+            return;
+        }
 
         const token = await authService.getAccessToken();
-        const requestObject = {
-            age: this.state.age,
-            dateOfBirth: this.state.dateOfBirth,
-            sumInsured: this.state.sumInsured,
-            occupationId: this.state.occupationId
-        };
+        const requestObject = this.state.model;
 
         fetch('api/Premium', {
             method: 'POST',
@@ -138,4 +142,10 @@ export class Home extends Component {
             }));
     }
 
+    updateModel(fieldName, fieldValue) {
+        let model = { ...this.state.model };  // make a copy of the object first to avoid changes by reference      
+        model[fieldName] = fieldValue; // use here event or value of selectedKey depending on your component's event
+        this.setState({ model });
+
+    }
 }

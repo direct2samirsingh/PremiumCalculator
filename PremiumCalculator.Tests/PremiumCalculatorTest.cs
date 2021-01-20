@@ -18,7 +18,13 @@ namespace PremiumCalculator.Tests
 
             double monthlyPremium = bizDeathPremium.Calculate(1_00_000, 25, occupation);
 
-            Assert.AreEqual<double>(monthlyPremium, 45_000);
+            Assert.AreEqual<double>(monthlyPremium, 312.50);
+        }
+
+        [TestMethod]
+        public void EnsureThatOccupationServiceReturnsData()
+        {
+            
         }
     }
 }
